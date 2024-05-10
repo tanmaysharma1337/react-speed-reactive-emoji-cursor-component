@@ -1,35 +1,31 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState, useCallback } from "react";
+import throttle from "lodash.throttle";
+import "./App.css";
+import Follower from "./components/Follower";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [posX, setPosX] = useState(0);
+  const [posY, setPosy] = useState(0);
 
+  window.addEventListener(
+    "mousemove",
+    useCallback(throttle(
+      (e) => {
+        let x = e.clientX;
+        let y = e.clientY;
+        setPosX(x);
+        setPosy(y);
+      },
+      10,
+      { trailing: true, leading: true }
+    ),[setPosX,setPosy])
+  );
+  
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <div>
+      <Follower posx={posX - 50} posy={posY - 50}></Follower>
+    </div>
+  );
 }
 
-export default App
+export default App;
